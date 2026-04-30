@@ -1,0 +1,27 @@
+# Example pick-and-place style trajectory for UFactory Lite 6.
+# All joint positions in radians. Six joints, matching the xarm_description URDF
+# joint naming: joint1..joint6.
+#
+# Conservative amplitudes well within Lite 6 joint limits. Intended for
+# safe testing — tune for your real task once you're confident the pipeline
+# is running correctly.
+#
+# Total loop duration: 13 s. Set waypoints.loop: true to repeat indefinitely.
+
+waypoints:
+  - positions: [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.0]    # home
+    duration_to_next_s: 2.0
+  - positions: [ 0.5, -0.3,  0.8,  0.0,  0.5,  0.0]    # approach pick
+    duration_to_next_s: 1.5
+  - positions: [ 0.5, -0.5,  1.0,  0.0,  0.5,  0.0]    # descend to pick
+    duration_to_next_s: 1.0
+  - positions: [ 0.5, -0.3,  0.8,  0.0,  0.5,  0.0]    # lift
+    duration_to_next_s: 1.5
+  - positions: [-0.5, -0.3,  0.8,  0.0,  0.5,  0.0]    # transport
+    duration_to_next_s: 2.0
+  - positions: [-0.5, -0.5,  1.0,  0.0,  0.5,  0.0]    # descend to place
+    duration_to_next_s: 1.0
+  - positions: [-0.5, -0.3,  0.8,  0.0,  0.5,  0.0]    # release & lift
+    duration_to_next_s: 1.5
+  - positions: [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.0]    # return home
+    duration_to_next_s: 2.0

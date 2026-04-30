@@ -1,0 +1,55 @@
+# Network impairment profiles for tc netem — dt_teleop_testbed.
+#
+# Each profile is a dict under `profiles:`. Supported keys:
+#   delay_ms                One-way mean delay (tc applies on egress only)
+#   jitter_ms               Jitter added +/- around the mean
+#   delay_correlation_pct   Correlation between successive delays
+#   loss_pct                Packet loss percentage
+#   duplicate_pct           Packet duplication percentage
+#   corrupt_pct             Packet corruption percentage
+#   reorder_pct             Packet reordering percentage
+#
+# Values are chosen to represent realistic network conditions that a
+# teleoperated robot link might encounter. Adjust as needed for your paper
+# — document any changes in the methods section.
+#
+# References for typical values:
+#   LAN               ~1 ms, <0.5 ms jitter, negligible loss
+#   WiFi (good)       ~10 ms, ~2 ms jitter, <0.1% loss
+#   WiFi (congested)  ~50 ms, 10-20 ms jitter, 0.5-2% loss
+#   4G LTE            ~50-70 ms, ~10-20 ms jitter, <1% loss
+#   Poor 4G           ~150-300 ms, high jitter, 1-3% loss
+#   Satellite (GEO)   ~500-700 ms one-way, low jitter, <1% loss
+
+profiles:
+
+  ideal:
+    # No impairment — passthrough. Baseline for all experiments.
+
+  lan:
+    delay_ms: 1
+    jitter_ms: 0.2
+
+  wifi_good:
+    delay_ms: 10
+    jitter_ms: 2
+
+  wifi_congested:
+    delay_ms: 50
+    jitter_ms: 10
+    loss_pct: 1
+
+  "4g":
+    delay_ms: 60
+    jitter_ms: 15
+    loss_pct: 0.5
+
+  poor_4g:
+    delay_ms: 200
+    jitter_ms: 50
+    loss_pct: 2
+
+  satellite:
+    delay_ms: 600
+    jitter_ms: 100
+    loss_pct: 0.5
