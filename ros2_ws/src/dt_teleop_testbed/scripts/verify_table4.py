@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-verify_table4.py — cross-check Table 4 of main.tex against raw data.
+verify_table4.py - cross-check the Spearman rho column of Table III against raw data.
 
 Recomputes per-profile Spearman correlations between AoI and K-AoI
-from enriched E3 CSVs *independently* of kaoi_vs_aoi_scatter.py,
+(the rho column of the published Table III) from enriched E3 CSVs
+*independently* of kaoi_vs_aoi_scatter.py,
 and reports four diagnostics per profile:
 
   1. Pooled Spearman rho (matches paper -- this is what Table 4 reports)
@@ -39,15 +40,16 @@ except ImportError:
 PROFILE_ORDER = ["ideal", "lan", "wifi_good", "wifi_congested",
                  "4g", "poor_4g", "satellite"]
 
-# Values currently in main.tex Table 4 (tab:rho).
+# Values in the Spearman rho column of Table III of the published paper
+# (IEEE Digital Twin 2026 camera-ready; reported to 2 decimal places).
 PUBLISHED = {
-    "ideal":          0.291,
-    "lan":            0.647,
-    "wifi_good":      0.626,
-    "wifi_congested": 0.608,
-    "4g":             0.651,
-    "poor_4g":        0.347,
-    "satellite":      0.218,
+    "ideal":          0.30,
+    "lan":            0.65,
+    "wifi_good":      0.63,
+    "wifi_congested": 0.63,
+    "4g":             0.66,
+    "poor_4g":        0.34,
+    "satellite":      0.22,
 }
 
 

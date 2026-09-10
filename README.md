@@ -333,13 +333,17 @@ python3 ros2_ws/src/dt_teleop_testbed/scripts/make_figure2_aggregate_bars.py \
 ```
 
 **Figure 3 (AoI vs K-AoI scatter, ideal and satellite, coloured by twin velocity).**
-Reproduces the canonical pooled samples and correlations
-(ideal: n = 33,852, ρ = +0.295; satellite: n = 6,156, ρ = +0.219):
+Reproduces the published side-by-side figure, including the pooled samples and
+correlations reported in its caption (ideal: n = 33,852, ρ = +0.295; satellite:
+n = 6,156, ρ = +0.219):
 
 ```bash
-python3 ros2_ws/src/dt_teleop_testbed/scripts/make_figure3_scatter.py \
+python3 ros2_ws/src/dt_teleop_testbed/scripts/make_figure3_scatter_wide.py \
     data/raw/*_enriched.csv --out-dir data/aggregated --transient-s 2.0
 ```
+
+`make_figure3_scatter.py` produces the same two panels stacked in a single-column
+layout; the data and statistics are identical.
 
 Spearman ρ is computed on the full pooled sample before any downsampling; downsampling
 (`--max-points`, default 8000 per panel, fixed seed) affects only which points are drawn.
@@ -380,6 +384,9 @@ Lite 6 URDF with URDF-Importer, and attach the scripts to the imported robot roo
 - **The bridge is a rate limiter, not a transport.** `twin_to_lite6_bridge` forwards at
   `forward_rate_hz`, which sets a floor on twin-to-robot lag independent of network
   conditions. This dominates measured Cartesian divergence at low impairment levels.
+  The paper's experiments ran the bridge at `forward_rate_hz:=5.0` (the launch default
+  is 10.0); the 5 Hz period is visible in the committed data as the 200 ms AoI sawtooth
+  under the ideal profile.
 - **`aoi_s` equals `aoi_real_s`**, the freshness of real-robot joint state as seen at
   the twin. `aoi_twin_s` is dominated by Unity-side frame stalls and is not affected by
   `tc netem`; do not use it as the network-staleness signal.
@@ -399,7 +406,7 @@ published in IEEE Xplore, please cite it as:
 
 ```bibtex
 @inproceedings{tian2026kaoi,
-  author    = {Tian, Lu and Deng, Zexin and Yuan, Zhenhui},
+  author    = {Tian, Lu and Yuan, Zhenhui and Deng, Zexin and Zhang, Wenjuan},
   title     = {{K-AoI}: A Spatio-Temporal Synchronization Metric for
                Digital Twin-based Teleoperation in Dynamic Network
                Environments},

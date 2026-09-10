@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-verify_table3.py — cross-check Table 3 of main.tex against raw data.
+verify_table3.py - cross-check Table III of the published paper against raw data.
 
 Recomputes per-profile statistics (AoI P99, P_tau, E_tau, K-AoI P95)
 from enriched E3 CSVs *independently of aggregate_runs.py*, then
@@ -40,15 +40,15 @@ import pandas as pd
 PROFILE_ORDER = ["ideal", "lan", "wifi_good", "wifi_congested",
                  "4g", "poor_4g", "satellite"]
 
-# Values currently in main.tex Table 3 (tab:headline).
+# Values in Table III of the published paper (IEEE Digital Twin 2026 camera-ready).
 PUBLISHED = {
-    "ideal":          {"aoi_p99": 199,  "p_tau": 0.7,  "e_tau": 1,   "kaoi_p95": 30},
+    "ideal":          {"aoi_p99": 199,  "p_tau": 0.7,  "e_tau": 1,   "kaoi_p95": 31},
     "lan":            {"aoi_p99": 200,  "p_tau": 1.3,  "e_tau": 1,   "kaoi_p95": 50},
-    "wifi_good":      {"aoi_p99": 210,  "p_tau": 5.5,  "e_tau": 6,   "kaoi_p95": 50},
-    "wifi_congested": {"aoi_p99": 280,  "p_tau": 22.3, "e_tau": 36,  "kaoi_p95": 75},
-    "4g":             {"aoi_p99": 270,  "p_tau": 24.8, "e_tau": 36,  "kaoi_p95": 65},
-    "poor_4g":        {"aoi_p99": 620,  "p_tau": 53.2, "e_tau": 129, "kaoi_p95": 130},
-    "satellite":      {"aoi_p99": 1450, "p_tau": 80.6, "e_tau": 454, "kaoi_p95": 390},
+    "wifi_good":      {"aoi_p99": 210,  "p_tau": 5.5,  "e_tau": 6,   "kaoi_p95": 51},
+    "wifi_congested": {"aoi_p99": 296,  "p_tau": 22.3, "e_tau": 36,  "kaoi_p95": 71},
+    "4g":             {"aoi_p99": 280,  "p_tau": 24.8, "e_tau": 36,  "kaoi_p95": 64},
+    "poor_4g":        {"aoi_p99": 639,  "p_tau": 53.2, "e_tau": 129, "kaoi_p95": 129},
+    "satellite":      {"aoi_p99": 1442, "p_tau": 80.6, "e_tau": 454, "kaoi_p95": 393},
 }
 
 
