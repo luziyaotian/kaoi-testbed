@@ -1,0 +1,147 @@
+\documentclass[border=8pt]{standalone}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\usepackage{graphicx}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{positioning, fit, backgrounds, arrows.meta, calc}
+
+\begin{document}
+
+% ===== Muted IEEE-style palette =====
+\definecolor{opcol}{RGB}{238, 238, 240}
+\definecolor{dtcol}{RGB}{220, 235, 252}
+\definecolor{edgecol}{RGB}{220, 240, 222}
+\definecolor{devcol}{RGB}{252, 234, 212}
+\definecolor{metcol}{RGB}{248, 222, 222}
+\definecolor{bord}{RGB}{60, 60, 60}
+\definecolor{accent}{RGB}{180, 30, 30}
+
+\begin{tikzpicture}[
+  font=\sffamily,
+  >={Stealth[length=2.6mm,width=2.0mm]},
+  box/.style={
+    rectangle, rounded corners=2pt, draw=bord, thick, fill=white,
+    minimum height=11mm, minimum width=60mm,
+    align=center, inner sep=3pt, font=\small
+  },
+  small/.style={box, minimum width=44mm, minimum height=9mm},
+  big/.style={box, minimum width=80mm},
+  ilabel/.style={
+    rectangle, draw=bord, thick, fill=white, rounded corners=2pt,
+    minimum height=6mm, minimum width=22mm, align=center,
+    font=\bfseries\footnotesize, anchor=north west, inner sep=2pt
+  },
+  arr/.style={->, thick, draw=bord},
+  bidir/.style={<->, thick, draw=bord},
+  note/.style={font=\scriptsize, align=center},
+  tag/.style={
+    note, fill=white, draw=bord!50, rounded corners=1pt,
+    inner sep=2pt, thin
+  },
+  callout/.style={
+    rectangle, draw=accent, dashed, thick, fill=white,
+    inner sep=2.5pt, font=\scriptsize, text=accent, align=center,
+    rounded corners=1pt
+  }
+]
+
+% ===== Background bands =====
+\begin{scope}[on background layer]
+  \fill[opcol,   rounded corners=4pt] (-7, 0.7)  rectangle (7, -0.9);
+  \fill[dtcol,   rounded corners=4pt] (-7, -0.9) rectangle (7, -2.9);
+  \fill[edgecol, rounded corners=4pt] (-7, -2.9) rectangle (7, -4.9);
+  \fill[devcol,  rounded corners=4pt] (-7, -4.9) rectangle (7, -8.3);
+  \fill[metcol,  rounded corners=4pt] (-7, -8.3) rectangle (7, -9.8);
+\end{scope}
+
+% Dashed dividers between bands
+\draw[dashed, draw=bord!45, thin] (-7, -0.9) -- (7, -0.9);
+\draw[dashed, draw=bord!45, thin] (-7, -2.9) -- (7, -2.9);
+\draw[dashed, draw=bord!45, thin] (-7, -4.9) -- (7, -4.9);
+\draw[dashed, draw=bord!45, thin] (-7, -8.3) -- (7, -8.3);
+
+% ===== Internal layer labels (top-left of each band) =====
+\node[ilabel] at (-6.85, 0.6)   {Operator};
+\node[ilabel] at (-6.85, -1.0)  {DT layer};
+\node[ilabel] at (-6.85, -3.0)  {Edge layer};
+\node[ilabel] at (-6.85, -5.0)  {Device layer};
+\node[ilabel] at (-6.85, -8.4)  {Metrics layer};
+
+% ===== Components =====
+\node[small] (op) at (0, 0) {%
+  \begin{tabular}{@{}c@{\hspace{2.5mm}}l@{}}
+    \includegraphics[width=7mm]{icon_operator.png} & Operator
+  \end{tabular}%
+};
+
+\node[box] (unity) at (0, -1.85) {%
+  \begin{tabular}{@{}c@{\hspace{3mm}}l@{}}
+    \includegraphics[width=9mm]{icon_server.png} &
+    \shortstack[l]{\textbf{Unity 2022.3 DT}\\[1pt]\footnotesize host A}
+  \end{tabular}%
+};
+
+\node[box] (bridge) at (0, -3.95) {%
+  \begin{tabular}{@{}c@{\hspace{3mm}}l@{}}
+    \includegraphics[width=9mm]{icon_bridge.png} &
+    \textbf{ROS 2 Jazzy bridge}
+  \end{tabular}%
+};
+
+\node[box] (driver) at (0, -5.85) {%
+  \begin{tabular}{@{}c@{\hspace{3mm}}l@{}}
+    \includegraphics[width=9mm]{icon_chip.png} &
+    xArm driver
+  \end{tabular}%
+};
+
+\node[box] (lite6) at (0, -7.45) {%
+  \begin{tabular}{@{}c@{\hspace{3mm}}l@{}}
+    \includegraphics[width=9mm]{icon_robot.png} &
+    \shortstack[l]{\textbf{Lite 6}\\[1pt]\footnotesize 6-DOF arm}
+  \end{tabular}%
+};
+
+\node[big] (metrics) at (0, -9.05) {%
+  \begin{tabular}{@{}c@{\hspace{3mm}}l@{}}
+    \includegraphics[width=9mm]{icon_metrics.png} &
+    \shortstack[l]{\textbf{Metrics pipeline}\\[1pt]\footnotesize AoI, $K$-AoI}
+  \end{tabular}%
+};
+
+% ===== Vertical flow arrows =====
+\draw[arr] (op.south) --
+  node[tag, right=2pt] {commands}
+  (unity.north);
+
+\draw[bidir] (unity.south) --
+  node[tag, right=2pt] {commands $\downarrow$ / state $\uparrow$}
+  (bridge.north);
+
+% tc netem callout (annotates the unity-bridge link)
+\node[callout] (netem) at (-3.4, -2.9) {tc netem\\on link};
+\draw[densely dashed, draw=accent, thin] (netem.east) -- (-0.05, -2.9);
+
+\draw[bidir] (bridge.south) --
+  node[tag, right=2pt] {commands $\downarrow$ / state $\uparrow$}
+  (driver.north);
+
+\draw[bidir] (driver.south) --
+  node[tag, right=2pt] {joint state}
+  (lite6.north);
+
+% ===== Cross-layer arrows to Metrics =====
+\coordinate (uL1) at ($(unity.west) + (-1.4, 0)$);
+\coordinate (uL2) at (uL1 |- metrics.west);
+\draw[arr] (unity.west) -- (uL1) -- (uL2) -- (metrics.west);
+\node[tag] at ($(uL1)!0.34!(uL2)$) {DT pose\\(timestamped)};
+
+\coordinate (lR1) at ($(lite6.east) + (1.4, 0)$);
+\coordinate (lR2) at (lR1 |- metrics.east);
+\draw[arr] (lite6.east) -- (lR1) -- (lR2) -- (metrics.east);
+\node[tag] at ($(lR1)!0.5!(lR2)$) {ground-truth\\(direct)};
+
+\end{tikzpicture}
+\end{document}
